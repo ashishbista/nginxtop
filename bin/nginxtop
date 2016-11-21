@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+require "bundler/setup"
+require "nginxtop"
+require 'optparse'
+
+options = {file: '/var/log/nginx/access.log', no_watch: false}
+
+parser = OptionParser.new do|opts|
+	opts.banner = "Usage: nginxtop [options]"
+	opts.on('-f', '--file file', 'NGINX log file') do |name|
+		options[:file] = file
+	end
+
+	opts.on('-n', '--no-watch', "Don't watch log forever") do
+		options[:no_watch] = true
+	end
+
+	opts.on('-h', '--help', 'Displays help') do
+		puts opts
+		exit
+	end
+end
+
+parser.parse!
+
+NginxTop::Listener.new(options).listen
+
